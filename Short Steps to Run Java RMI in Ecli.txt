@@ -1,0 +1,68 @@
+Short Steps to Run Java RMI in Eclipse
+1. Create Java Project
+
+Create project in Eclipse.
+
+Delete:
+
+module-info.java
+2. Create Package
+
+Create package:
+
+ds_2
+3. Create Files
+
+Create:
+
+AddServerIntf.java
+AddServerImpl.java
+AddServer.java
+AddClient.java
+
+Paste code.
+
+4. Use Java 8
+
+Set project JDK to:
+
+JavaSE-1.8
+5. Clean Project
+Project → Clean
+6. Open CMD in bin Folder
+cd "D:\eclipse workspace\RMI_Assignment\bin"
+7. Start RMI Registry
+
+Run:
+
+rmiregistry
+
+Keep terminal open.
+
+8. Run Server
+
+In Eclipse:
+
+Right Click AddServer.java
+→ Run As → Java Application
+
+Output:
+
+Server Started...
+9. Run Client
+
+In Eclipse:
+
+Right Click AddClient.java
+→ Run As → Java Application
+
+Output:
+
+Addition Result = 30.0
+Execution Order
+1. rmiregistry
+2. Run Server
+3. Run Client
+Simple Viva Line
+
+“RMI allows client to invoke methods remotely on server objects using the RMI registry.”
