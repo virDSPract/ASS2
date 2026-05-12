@@ -1,0 +1,311 @@
+Assignment 2 — Remote Method Invocation (RMI)
+Aim
+
+To implement multi-threaded client/server process communication using Java RMI (Remote Method Invocation).
+
+What is RMI?
+
+RMI (Remote Method Invocation) allows one Java program to call methods of another Java program running on a different machine.
+
+It works like:
+
+Client → calls method remotely → Server executes method → returns result
+Real-Life Example
+
+Example:
+
+ATM machine communicating with bank server
+Online payment systems
+Distributed applications
+Components of RMI
+1. Remote Interface
+
+Defines methods that client can call remotely.
+
+2. Remote Object (Implementation)
+
+Implements remote methods.
+
+3. Server
+
+Creates remote object and registers it.
+
+4. Client
+
+Looks up remote object and invokes methods.
+
+5. RMI Registry
+
+Stores remote object references.
+
+RMI Architecture
++-------------+        RMI Call         +-------------+
+|   Client    | ---------------------> |   Server    |
+| lookup()    |                         | add() Method|
++-------------+                         +-------------+
+         \                                  /
+          \                                /
+               RMI Registry
+Files Required in RMI Program
+
+Usually RMI practical contains:
+
+File	Purpose
+AddServerIntf.java	Remote Interface
+AddServerImpl.java	Method Implementation
+AddServer.java	Starts Server
+AddClient.java	Calls Remote Method
+1. Remote Interface Explanation
+AddServerIntf.java
+package RMI;
+
+import java.rmi.*;
+
+public interface AddServerIntf extends Remote {
+
+    public double add(double d1, double d2)
+            throws RemoteException;
+}
+Explanation
+extends Remote
+extends Remote
+
+Makes interface available for remote access.
+
+Remote Method
+public double add(double d1, double d2)
+
+Method that client can call remotely.
+
+throws RemoteException
+
+Required in all remote methods to handle network-related errors.
+
+2. Implementation Class
+AddServerImpl.java
+package RMI;
+
+import java.rmi.*;
+import java.rmi.server.*;
+
+public class AddServerImpl
+extends UnicastRemoteObject
+implements AddServerIntf {
+
+    public AddServerImpl()
+    throws RemoteException {
+        super();
+    }
+
+    public double add(double d1, double d2)
+    throws RemoteException {
+
+        return d1 + d2;
+    }
+}
+Explanation
+extends UnicastRemoteObject
+extends UnicastRemoteObject
+
+Exports object for remote communication.
+
+implements AddServerIntf
+
+Implements remote interface methods.
+
+Constructor
+public AddServerImpl() throws RemoteException
+
+Required because remote object creation may cause network exceptions.
+
+add() Method
+return d1 + d2;
+
+Returns addition result to client.
+
+3. Server Program Explanation
+AddServer.java
+package RMI;
+
+import java.rmi.*;
+
+public class AddServer {
+
+    public static void main(String[] args) {
+
+        try {
+
+            AddServerImpl addoAddServerImpl =
+                    new AddServerImpl();
+
+            Naming.rebind("AddServer",
+                    addoAddServerImpl);
+
+            System.out.println("Server Started...");
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+}
+Explanation
+Create Remote Object
+AddServerImpl addoAddServerImpl =
+new AddServerImpl();
+
+Creates implementation object.
+
+Register Object
+Naming.rebind("AddServer",
+addoAddServerImpl);
+
+Registers remote object with RMI registry.
+
+Meaning
+"AddServer" → object name
+Client uses this name to access server.
+4. Client Program Explanation
+AddClient.java
+package RMI;
+
+import java.rmi.*;
+
+public class AddClient {
+
+    public static void main(String[] args) {
+
+        try {
+
+            AddServerIntf addObAddServerIntf =
+            (AddServerIntf) Naming.lookup(
+            "rmi://127.0.0.1/AddServer");
+
+            double num1 = 10;
+            double num2 = 20;
+
+            double result =
+            addObAddServerIntf.add(num1, num2);
+
+            System.out.println(
+            "Addition Result = " + result);
+
+        } catch(Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+}
+Explanation
+lookup()
+Naming.lookup("rmi://127.0.0.1/AddServer")
+
+Searches remote object from RMI registry.
+
+Components
+Part	Meaning
+rmi://	RMI protocol
+127.0.0.1	localhost
+AddServer	registered object name
+Remote Method Call
+addObAddServerIntf.add(num1, num2);
+
+Client remotely calls server method.
+
+Output
+Server Output
+Server Started...
+Client Output
+Addition Result = 30.0
+Step-by-Step Practical Execution
+Step 1
+
+Create Java Project in Eclipse.
+
+Step 2
+
+Create package:
+
+RMI
+Step 3
+
+Create files:
+
+AddServerIntf.java
+AddServerImpl.java
+AddServer.java
+AddClient.java
+Step 4
+
+Compile all files.
+
+Step 5
+
+Open terminal in project directory.
+
+Run:
+
+rmiregistry
+
+Keep terminal open.
+
+Step 6
+
+Run AddServer.java
+
+Output:
+
+Server Started...
+Step 7
+
+Run AddClient.java
+
+Output:
+
+Addition Result = 30.0
+How RMI Works Internally
+1. Server creates remote object
+2. Server registers object in rmiregistry
+3. Client searches object using lookup()
+4. Client calls remote method
+5. Server executes method
+6. Result returned to client
+Difference Between Socket and RMI
+Socket Programming	RMI
+Low-level communication	High-level communication
+Manual data handling	Direct method invocation
+More coding	Easier coding
+Language independent	Java-specific
+Multi-threading in RMI
+
+RMI server can handle multiple client requests simultaneously.
+
+Each client request runs in separate thread automatically.
+
+Viva Questions
+1. What is RMI?
+
+Java technology for calling methods remotely.
+
+2. What is rmiregistry?
+
+Registry service that stores remote objects.
+
+3. What is Remote interface?
+
+Interface containing remote methods.
+
+4. Why RemoteException is used?
+
+To handle network communication errors.
+
+5. What is Naming.lookup()?
+
+Used by client to find remote object.
+
+6. Difference between Socket and RMI?
+Socket → message-based communication
+RMI → method-based communication
+Conclusion
+
+Thus, we successfully implemented a Remote Method Invocation (RMI) application in Java. The client remotely invoked the server method using RMI registry, demonstrating distributed client-server communication and interprocess communication using Java RMI.
